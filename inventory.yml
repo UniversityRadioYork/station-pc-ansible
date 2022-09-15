@@ -4,3 +4,4 @@ all:
     studio-presenter:
       hosts:
         studio1.ury.york.ac.uk:
+        studio2.ury.york.ac.uk:
