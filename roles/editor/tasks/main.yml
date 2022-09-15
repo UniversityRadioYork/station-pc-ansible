@@ -1,0 +1,100 @@
+---
+# audacity
+# reaper
+# filestore
+# IRN
+
+- name: install audacity
+  apt:
+    name:
+      - audacity
+  become: yes
+
+# TODO reaper
+
+- name: install cifs-utils
+  apt:
+    name:
+      - cifs-utils
+  become: yes
+
+- name: map drives
+  blockinfile:
+    path: /etc/fstab
+    block: |
+      //filestore.ury.york.ac.uk/filestore/Profiles/ury /mnt/ury  cifs  username=ury,password=ury,uid=ury,gid=ury 0 0
+      //filestore.ury.york.ac.uk/filestore/People /mnt/People cifs  username=ury,password=ury,uid=ury,gid=ury 0 0
+      //filestore.ury.york.ac.uk/filestore/Shows  /mnt/Shows  cifs  username=ury,password=ury,uid=ury,gid=ury 0 0
+      //filestore.ury.york.ac.uk/filestore/Teams  /mnt/Teams  cifs  username=ury,password=ury,uid=ury,gid=ury 0 0
+  become: yes
+  notify:
+    - mount drives
+
+- name: symlink ury profile
+  file:
+    src: /mnt/ury
+    dest: /home/ury/Documents
+    owner: ury
+    state: link
+
+- name: symlink downloads
+  file:
+    src: /mnt/ury/Downloads
+    dest: /home/ury/Downloads
+    owner: ury
+    state: link
+
+- name: symlink Pictures
+  file:
+    src: '/mnt/ury/My Pictures'
+    dest: /home/ury/Pictures
+    owner: ury
+    state: link
+
+- name: symlink Music
+  file:
+    src: '/mnt/ury/My Music'
+    dest: /home/ury/Music
+    owner: ury
+    state: link
+
+- name: symlink People
+  file:
+    src: /mnt/People
+    dest: /home/ury/People
+    owner: ury
+    state: link
+
+- name: symlink Shows
+  file:
+    src: /mnt/Shows
+    dest: /home/ury/Shows
+    owner: ury
+    state: link
+
+- name: symlink Teams
+  file:
+    src: /mnt/Teams
+    dest: /home/ury/Teams
+    owner: ury
+    state: link
+
+## TODO install Chrome (the fox can't easily do proxy settings programatically)
+
+- name: create IRN shortcut
+  blockinfile:
+    path: '/home/ury/Desktop/IRN Newsroom.desktop'
+    block: |
+      [Desktop Entry]
+      Version=1.0
+      Type=Application
+      Name=IRN Newsroom
+      Comment=Goes through the proxy
+      Exec=google-chrome --proxy-server="144.32.64.161:3128" http://www.irn.co.uk/NetNewsroom.aspx
+      Icon=
+      Path=
+      Terminal=false
+      StartupNotify=false
+    create: yes
+    mode: 0777
+    owner: ury

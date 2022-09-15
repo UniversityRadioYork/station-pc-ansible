@@ -1,0 +1,24 @@
+---
+# make URY user
+# disable URY user SSH
+# read only ~ury
+
+- name: create URY user
+  user:
+    name: ury
+    password: "$6$ury$K.sDA.ueCxAVlc0.YstxB9FEVVfS3MDRM10s65Pmt.21rECy0CrXc1xfKsqAoT.UrlaLwfb/w2IpEsGdV/ZWT."
+  become: yes
+
+- name: disable URY user SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: 'DenyUsers  ury'
+  become: yes
+  notify:
+    - restart ssh
+
+- name: make home read only
+  # so people save things in Documents/People/Shows etc
+  file:
+    path: /home/ury
+    mode: 0555

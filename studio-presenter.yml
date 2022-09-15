@@ -1,0 +1,6 @@
+---
+- name: configure main studio PCs
+  hosts: studio-presenter
+  roles:
+    - common
+    - editor

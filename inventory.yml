@@ -1,0 +1,6 @@
+---
+all:
+  children:
+    studio-presenter:
+      hosts:
+        studio1.ury.york.ac.uk:
